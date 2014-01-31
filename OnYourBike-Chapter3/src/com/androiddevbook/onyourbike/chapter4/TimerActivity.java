@@ -1,15 +1,17 @@
-package com.androiddevbook.onyourbike.chapter3;
+package com.androiddevbook.onyourbike.chapter4;
+
+import com.androiddevbook.onyourbike.chapter4.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
-public class MainActivity extends Activity {
+public class TimerActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_timer);
     }
 
 

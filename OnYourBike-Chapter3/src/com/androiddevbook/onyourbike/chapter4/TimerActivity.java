@@ -8,15 +8,31 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class TimerActivity extends Activity {
 	
 	private static final String CLASS_NAME = TimerActivity.class.getSimpleName();
+	
+	protected TextView counter;
+	protected Button start;
+	protected Button stop;
+	
+	protected boolean timerRunning;
+	protected long startedAt;
+	protected long lastStopped;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        
+        counter = (TextView) findViewById(R.id.timer);
+        start = (Button) findViewById(R.id.start_button);
+        stop = (Button) findViewById(R.id.stop_button);
+        
+        enableButtons();
         
         if (BuildConfig.DEBUG) {
         	StrictMode.setThreadPolicy(
@@ -48,10 +64,39 @@ public class TimerActivity extends Activity {
     
     public void clickedStart(View view) {
     	Log.d(CLASS_NAME, "Start clicked.");
+    	timerRunning = true;
+    	enableButtons();
+    	startedAt = System.currentTimeMillis();
     }
     
     public void clickedStop(View view) {
     	Log.d(CLASS_NAME, "Stop clicked.");
+    	timerRunning = false;
+    	enableButtons();
+    	lastStopped = System.currentTimeMillis();
+    }
+    
+    protected void enableButtons() {
+    	Log.d(CLASS_NAME, "Setting buttons to enabled.");
+    	start.setEnabled(!timerRunning);
+    	stop.setEnabled(timerRunning);
+    }
+    
+    protected void setTimeDisplay() {
+    	String display;
+    	long timeNow;
+    	long diff;
+    	long seconds;
+    	long minutes;
+    	long hours;
+    	
+    	Log.d(CLASS_NAME, "Setting the time display.");
+    	
+    	if (timerRunning) {
+    		
+    	} else {
+    		
+    	}
     }
     
 }

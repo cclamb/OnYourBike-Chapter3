@@ -67,6 +67,7 @@ public class TimerActivity extends Activity {
     	timerRunning = true;
     	enableButtons();
     	startedAt = System.currentTimeMillis();
+    	setTimeDisplay();
     }
     
     public void clickedStop(View view) {
@@ -74,6 +75,7 @@ public class TimerActivity extends Activity {
     	timerRunning = false;
     	enableButtons();
     	lastStopped = System.currentTimeMillis();
+    	setTimeDisplay();
     }
     
     protected void enableButtons() {
@@ -93,10 +95,30 @@ public class TimerActivity extends Activity {
     	Log.d(CLASS_NAME, "Setting the time display.");
     	
     	if (timerRunning) {
-    		
+    		timeNow = System.currentTimeMillis();
     	} else {
-    		
+    		timeNow = lastStopped;
     	}
+    	
+    	diff = timeNow = startedAt;
+    	
+    	if (diff < 0) {
+    		diff = 0;
+    	}
+    	
+    	seconds = diff /1000;
+    	minutes = seconds / 60;
+    	hours = minutes / 60;
+    	seconds = seconds % 60;
+    	minutes = minutes % 60;
+    	
+    	display = String.format("%d", hours) + ":"
+    			+ String.format("%02d", minutes) + ":"
+    			+ String.format("%02d", seconds);
+    	
+    	counter.setText(display);
+    			
+    	
     }
     
 }

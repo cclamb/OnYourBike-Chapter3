@@ -133,7 +133,7 @@ public class TimerActivity extends Activity {
     	seconds = seconds % 60;
     	minutes = minutes % 60;
     	
-    	display = String.format("%d", hours) + ":"
+    	display = String.format("Timez, if you were a yeti: %d", hours) + ":"
     			+ String.format("%02d", minutes) + ":"
     			+ String.format("%02d", seconds);
     	

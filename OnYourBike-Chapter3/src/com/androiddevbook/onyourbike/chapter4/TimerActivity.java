@@ -3,6 +3,7 @@ package com.androiddevbook.onyourbike.chapter4;
 import com.androiddevbook.onyourbike.chapter4.R;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.app.Activity;
 import android.util.Log;
@@ -14,6 +15,18 @@ import android.widget.TextView;
 public class TimerActivity extends Activity {
 	
 	private static final String CLASS_NAME = TimerActivity.class.getSimpleName();
+	private static final long UPDATE_INTERVAL = 200;
+	
+	protected class UpdateTimer implements Runnable {
+		@Override
+		public void run() {
+			Log.d(UpdateTimer.class.getSimpleName(), "running timer.");
+			setTimeDisplay();
+			if (handler != null) {
+				handler.postDelayed(this, UPDATE_INTERVAL);
+			}
+		}
+	}
 	
 	protected TextView counter;
 	protected Button start;
@@ -22,6 +35,9 @@ public class TimerActivity extends Activity {
 	protected boolean timerRunning;
 	protected long startedAt;
 	protected long lastStopped;
+	
+	protected Handler handler;
+	protected UpdateTimer updateTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +84,9 @@ public class TimerActivity extends Activity {
     	enableButtons();
     	startedAt = System.currentTimeMillis();
     	setTimeDisplay();
+    	handler = new Handler();
+    	updateTimer = new UpdateTimer();
+    	handler.postDelayed(updateTimer, UPDATE_INTERVAL);
     }
     
     public void clickedStop(View view) {
@@ -76,6 +95,8 @@ public class TimerActivity extends Activity {
     	enableButtons();
     	lastStopped = System.currentTimeMillis();
     	setTimeDisplay();
+    	handler.removeCallbacks(updateTimer);
+    	handler = null;
     }
     
     protected void enableButtons() {
@@ -100,7 +121,7 @@ public class TimerActivity extends Activity {
     		timeNow = lastStopped;
     	}
     	
-    	diff = timeNow = startedAt;
+    	diff = timeNow - startedAt;
     	
     	if (diff < 0) {
     		diff = 0;

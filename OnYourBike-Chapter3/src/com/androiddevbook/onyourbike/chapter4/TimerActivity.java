@@ -5,6 +5,7 @@ import com.androiddevbook.onyourbike.chapter4.R;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +23,11 @@ public class TimerActivity extends Activity {
 		public void run() {
 			Log.d(UpdateTimer.class.getSimpleName(), "running timer.");
 			setTimeDisplay();
+			
+			if (timerRunning) {
+				vibrateCheck();
+			}
+			
 			if (handler != null) {
 				handler.postDelayed(this, UPDATE_INTERVAL);
 			}
@@ -38,10 +44,14 @@ public class TimerActivity extends Activity {
 	
 	protected Handler handler;
 	protected UpdateTimer updateTimer;
-
+	
+	protected Vibrator vibrate;
+	protected long lastSeconds;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(CLASS_NAME, "onCreate");
         setContentView(R.layout.activity_timer);
         
         counter = (TextView) findViewById(R.id.timer);
@@ -69,7 +79,57 @@ public class TimerActivity extends Activity {
         }
         
     }
-
+    
+    
+    @Override
+    public void onStart() {
+    	super.onStart();
+    	Log.d(CLASS_NAME, "onStart");
+    	if (timerRunning) {
+    		handler = new Handler();
+    		updateTimer = new UpdateTimer();
+    		handler.postDelayed(updateTimer, UPDATE_INTERVAL);
+    	}
+    	
+    	vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+    	Log.d(CLASS_NAME, "onPause");
+    }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	Log.d(CLASS_NAME, "onResume");
+    	enableButtons();
+    	setTimeDisplay();
+    }
+    
+    @Override
+    public void onStop() {
+    	super.onStop();
+    	Log.d(CLASS_NAME, "onStop");
+    	if (timerRunning) {
+    		handler.removeCallbacks(updateTimer);
+    		updateTimer = null;
+    		handler = null;
+    	}
+    }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	Log.d(CLASS_NAME, "onDestroy");
+    }
+    
+    @Override
+    public void onRestart() {
+    	super.onRestart();
+    	Log.d(CLASS_NAME, "onRestart");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,6 +199,46 @@ public class TimerActivity extends Activity {
     	
     	counter.setText(display);
     			
+    	
+    }
+    
+    protected void vibrateCheck() {
+    	long timeNow = System.currentTimeMillis();
+    	long diff = timeNow - startedAt;
+    	long seconds = diff / 1000;
+    	long minutes = seconds / 60;
+    	
+    	Log.d(CLASS_NAME, "vibrateCheck");
+    	
+    	seconds = seconds % 60;
+    	minutes = minutes % 60;
+    	
+    	if (vibrate != null 
+    			&& seconds == 0 
+    			&& seconds != lastSeconds) {
+    		
+    		long[] once = {0, 100};
+    		long[] twice = {0, 100, 400, 100};
+    		long[] thrice = {0, 100, 400, 100, 400, 100};
+    		
+    		// every hour
+    		if (minutes == 0) {
+    			Log.i(CLASS_NAME, "on the hour");
+    			vibrate.vibrate(thrice, -1);
+    		} else if (minutes % 15 == 0) { // every 15 minutes
+    			Log.i(CLASS_NAME, "on the quarter hour"); 
+    			vibrate.vibrate(twice, -1);
+    		} else if (minutes % 5 == 0) { // every 5 minutes
+    			Log.i(CLASS_NAME, "on the five");
+    			vibrate.vibrate(once, -1);
+    		} else if (minutes % 1 == 0) {
+    			Log.i(CLASS_NAME, "on the one");
+    			vibrate.vibrate(once, -1);
+    		}
+    		
+    	}
+    	
+    	lastSeconds = seconds;
     	
     }
     

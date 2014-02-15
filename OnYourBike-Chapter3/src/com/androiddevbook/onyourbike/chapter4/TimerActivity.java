@@ -7,18 +7,19 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TimerActivity extends Activity {
+public final class TimerActivity extends Activity {
 	
 	private static final String CLASS_NAME = TimerActivity.class.getSimpleName();
 	private static final long UPDATE_INTERVAL = 200;
 	
-	protected class UpdateTimer implements Runnable {
+	private class UpdateTimer implements Runnable {
 		@Override
 		public void run() {
 			Log.d(UpdateTimer.class.getSimpleName(), "running timer.");
@@ -34,19 +35,21 @@ public class TimerActivity extends Activity {
 		}
 	}
 	
-	protected TextView counter;
-	protected Button start;
-	protected Button stop;
+	private TextView counter;
+	private Button start;
+	private Button stop;
 	
-	protected boolean timerRunning;
-	protected long startedAt;
-	protected long lastStopped;
+	private boolean timerRunning;
+	private long startedAt;
+	private long lastStopped;
 	
-	protected Handler handler;
-	protected UpdateTimer updateTimer;
+	private Handler handler;
+	private UpdateTimer updateTimer;
 	
-	protected Vibrator vibrate;
-	protected long lastSeconds;
+	private Vibrator vibrate;
+	private long lastSeconds;
+	
+	private Intent settingsIntent;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +139,16 @@ public class TimerActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+    public void clickedSettings(View view) {
+    	Log.d(CLASS_NAME, "clicked settings");
+    	if (settingsIntent == null) {
+    		settingsIntent = new Intent(
+    			getApplicationContext(),
+    			SettingsActivity.class);
+    	}
+    	startActivity(settingsIntent);
     }
     
     public void clickedStart(View view) {

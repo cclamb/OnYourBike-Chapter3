@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".OnYourBike"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/title_activity_timer"

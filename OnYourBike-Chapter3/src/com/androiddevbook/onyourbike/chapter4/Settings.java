@@ -1,19 +1,32 @@
 package com.androiddevbook.onyourbike.chapter4;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public final class Settings {
 	private static final String CLASS_NAME = Settings.class.getSimpleName();
+	private static final String VIBRATE = "vibrate";
 	
 	private boolean vibrateOn;
-
-	protected boolean isVibrateOn() {
+	
+	public boolean isVibrateOn(Activity activity) {
 		Log.d(CLASS_NAME, "returning vibrate");
+		SharedPreferences preferences 
+			= activity.getPreferences(Activity.MODE_PRIVATE);
+		if (preferences.contains(VIBRATE)) {
+			vibrateOn = preferences.getBoolean(VIBRATE, false);
+		}
 		return vibrateOn;
 	}
-
-	protected void setVibrateOn(boolean vibrateOn) {
+	
+	public void setVibrateOn(Activity activity, boolean vibrateOn) {
 		Log.d(CLASS_NAME, "setting vibrate");
-		this.vibrateOn = vibrateOn;
+		activity.getPreferences(Activity.MODE_PRIVATE)
+			.edit()
+			.putBoolean(VIBRATE, vibrateOn)
+			.apply();
+		this.vibrateOn = vibrateOn;;
 	}
+
 }

@@ -16,7 +16,7 @@ public class SettingsActivity extends Activity {
 		vibrate = (CheckBox) findViewById(R.id.vibrate_checkbox);
 		Settings settings = ((OnYourBike) getApplication())
 				.getSettings();
-		vibrate.setChecked(settings.isVibrateOn());
+		vibrate.setChecked(settings.isVibrateOn(this));
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class SettingsActivity extends Activity {
 		super.onStop();
 		Settings settings = ((OnYourBike) getApplication())
 				.getSettings();
-		settings.setVibrateOn(vibrate.isChecked());
+		settings.setVibrateOn(this, vibrate.isChecked());
 	}
 
 }

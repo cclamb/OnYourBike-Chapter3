@@ -77,7 +77,6 @@ public final class TimerActivity extends Activity {
 	        			.Builder()
 	        			.detectAll()
 	        			.penaltyLog()
-	        			.penaltyDeath()
 	        			.build());
         }
         
@@ -143,11 +142,9 @@ public final class TimerActivity extends Activity {
     
     public void clickedSettings(View view) {
     	Log.d(CLASS_NAME, "clicked settings");
-    	if (settingsIntent == null) {
-    		settingsIntent = new Intent(
-    			getApplicationContext(),
-    			SettingsActivity.class);
-    	}
+		settingsIntent = new Intent(
+			getApplicationContext(),
+			SettingsActivity.class);
     	startActivity(settingsIntent);
     }
     

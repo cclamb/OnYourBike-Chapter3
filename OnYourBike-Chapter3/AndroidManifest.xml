@@ -11,13 +11,13 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".OnYourBike"
+        android:name="com.androiddevbook.onyourbike.chapter5.OnYourBike"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/title_activity_timer"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.androiddevbook.onyourbike.chapter4.TimerActivity"
+            android:name="com.androiddevbook.onyourbike.chapter5.activities.TimerActivity"
             android:label="@string/title_activity_timer" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.androiddevbook.onyourbike.chapter4.SettingsActivity"
+            android:name="com.androiddevbook.onyourbike.chapter5.activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
     </application>

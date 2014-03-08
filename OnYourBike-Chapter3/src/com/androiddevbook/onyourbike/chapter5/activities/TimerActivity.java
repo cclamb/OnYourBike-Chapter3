@@ -1,6 +1,8 @@
-package com.androiddevbook.onyourbike.chapter4;
+package com.androiddevbook.onyourbike.chapter5.activities;
 
+import com.androiddevbook.onyourbike.chapter4.BuildConfig;
 import com.androiddevbook.onyourbike.chapter4.R;
+import com.androiddevbook.onyourbike.chapter5.model.TimerState;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,16 +18,17 @@ import android.widget.TextView;
 
 public final class TimerActivity extends Activity {
 	
-	private static final String CLASS_NAME = TimerActivity.class.getSimpleName();
+	public static final String CLASS_NAME = TimerActivity.class.getSimpleName();
 	private static final long UPDATE_INTERVAL = 200;
+	
+	private final TimerState timer = new TimerState();
 	
 	private class UpdateTimer implements Runnable {
 		@Override
 		public void run() {
 			Log.d(UpdateTimer.class.getSimpleName(), "running timer.");
-			setTimeDisplay();
-			
-			if (timerRunning) {
+			counter.setText(timer.display());
+			if (timer.isRunning()) {
 				vibrateCheck();
 			}
 			
@@ -35,13 +38,9 @@ public final class TimerActivity extends Activity {
 		}
 	}
 	
-	private TextView counter;
+	public TextView counter;
 	private Button start;
 	private Button stop;
-	
-	private boolean timerRunning;
-	private long startedAt;
-	private long lastStopped;
 	
 	private Handler handler;
 	private UpdateTimer updateTimer;
@@ -87,7 +86,7 @@ public final class TimerActivity extends Activity {
     public void onStart() {
     	super.onStart();
     	Log.d(CLASS_NAME, "onStart");
-    	if (timerRunning) {
+    	if (timer.isRunning()) {
     		handler = new Handler();
     		updateTimer = new UpdateTimer();
     		handler.postDelayed(updateTimer, UPDATE_INTERVAL);
@@ -107,14 +106,14 @@ public final class TimerActivity extends Activity {
     	super.onResume();
     	Log.d(CLASS_NAME, "onResume");
     	enableButtons();
-    	setTimeDisplay();
+    	counter.setText(timer.display());
     }
     
     @Override
     public void onStop() {
     	super.onStop();
     	Log.d(CLASS_NAME, "onStop");
-    	if (timerRunning) {
+    	if (timer.isRunning()) {
     		handler.removeCallbacks(updateTimer);
     		updateTimer = null;
     		handler = null;
@@ -150,10 +149,9 @@ public final class TimerActivity extends Activity {
     
     public void clickedStart(View view) {
     	Log.d(CLASS_NAME, "Start clicked.");
-    	timerRunning = true;
+    	timer.start();
     	enableButtons();
-    	startedAt = System.currentTimeMillis();
-    	setTimeDisplay();
+    	counter.setText(timer.display());
     	handler = new Handler();
     	updateTimer = new UpdateTimer();
     	handler.postDelayed(updateTimer, UPDATE_INTERVAL);
@@ -161,60 +159,21 @@ public final class TimerActivity extends Activity {
     
     public void clickedStop(View view) {
     	Log.d(CLASS_NAME, "Stop clicked.");
-    	timerRunning = false;
+    	timer.stop();
     	enableButtons();
-    	lastStopped = System.currentTimeMillis();
-    	setTimeDisplay();
+    	counter.setText(timer.display());
     	handler.removeCallbacks(updateTimer);
     	handler = null;
     }
     
     protected void enableButtons() {
     	Log.d(CLASS_NAME, "Setting buttons to enabled.");
-    	start.setEnabled(!timerRunning);
-    	stop.setEnabled(timerRunning);
-    }
-    
-    protected void setTimeDisplay() {
-    	String display;
-    	long timeNow;
-    	long diff;
-    	long seconds;
-    	long minutes;
-    	long hours;
-    	
-    	Log.d(CLASS_NAME, "Setting the time display.");
-    	
-    	if (timerRunning) {
-    		timeNow = System.currentTimeMillis();
-    	} else {
-    		timeNow = lastStopped;
-    	}
-    	
-    	diff = timeNow - startedAt;
-    	
-    	if (diff < 0) {
-    		diff = 0;
-    	}
-    	
-    	seconds = diff /1000;
-    	minutes = seconds / 60;
-    	hours = minutes / 60;
-    	seconds = seconds % 60;
-    	minutes = minutes % 60;
-    	
-    	display = String.format("Timez, if you were a yeti: %d", hours) + ":"
-    			+ String.format("%02d", minutes) + ":"
-    			+ String.format("%02d", seconds);
-    	
-    	counter.setText(display);
-    			
-    	
+    	start.setEnabled(!timer.isRunning());
+    	stop.setEnabled(timer.isRunning());
     }
     
     protected void vibrateCheck() {
-    	long timeNow = System.currentTimeMillis();
-    	long diff = timeNow - startedAt;
+    	long diff = timer.elapsedTime();
     	long seconds = diff / 1000;
     	long minutes = seconds / 60;
     	

@@ -1,4 +1,8 @@
-package com.androiddevbook.onyourbike.chapter4;
+package com.androiddevbook.onyourbike.chapter5.activities;
+
+import com.androiddevbook.onyourbike.chapter4.R;
+import com.androiddevbook.onyourbike.chapter5.OnYourBike;
+import com.androiddevbook.onyourbike.chapter5.model.Settings;
 
 import android.os.Bundle;
 import android.app.Activity;

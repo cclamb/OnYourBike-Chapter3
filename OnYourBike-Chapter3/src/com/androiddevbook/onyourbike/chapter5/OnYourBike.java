@@ -1,4 +1,6 @@
-package com.androiddevbook.onyourbike.chapter4;
+package com.androiddevbook.onyourbike.chapter5;
+
+import com.androiddevbook.onyourbike.chapter5.model.Settings;
 
 import android.app.Application;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.androiddevbook.onyourbike.chapter4;
+package com.androiddevbook.onyourbike.chapter5.model;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
